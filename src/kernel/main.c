@@ -1,26 +1,21 @@
-#include "include/serial.h"   // Our existing serial driver
-#include "include/graphics.h" // Our new graphics driver
+#include "include/serial.h"
+#include "include/keyboard.h"
+#include "include/shell.h"
+#include "include/graphics.h"
 
 void kmain(void) {
-    // 1. Initialize the serial console for debug messages
+    // 1. Initialize drivers
     uart_init();
-    print("--- KERNEL BOOTED ---\n");
-    print("Initializing graphics mode...\n");
-
-    // 2. Initialize the graphics driver
+    keyboard_init();
     graphics_init();
+
+    // 2. Print a welcome message to the serial console
+    print("--- KERNEL BOOTED ---\n\n");
     
-    // 3. Draw to the screen
-    print("Drawing to framebuffer...\n");
+    // 3. Initialize and run the shell
+    shell_init();
+    shell_run(); 
 
-    // Clear the screen to blue
-    draw_filled_rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, COLOR_BLUE);
-
-    // Draw a white rectangle in the middle
-    draw_filled_rectangle(312, 284, 400, 200, COLOR_WHITE);
-    
-    print("Graphics test complete.\n");
-
-    // 4. Halt the CPU
+    // 4. Halt the CPU (should not be reached)
     while (1) {}
 }
